@@ -10,6 +10,7 @@ public class MazeGenerationController
     private IMazeGenerator _generator;
     public event Action? OnNextStep;
     public event Action? OnGenerationDone;
+    public event Action? OnStartGeneration;
     public int DelayInMs { get; set; } = 500;
     
     public MazeGenerationController(IMazeGenerator generator)
@@ -27,9 +28,18 @@ public class MazeGenerationController
         _generator.StartGeneration(width, height);
         GenerationSteps = _generator.GetSteps().GetEnumerator();
         _currentMaze = _generator.Maze;
+        _generationDone = false;
+        _totalTime = _lastStepTime = TimeSpan.Zero;
+        OnStartGeneration?.Invoke();
     }
 
-    public bool NextStep()
+    public void RestartGeneration()
+    {
+        if (_generator.Maze == null) throw new InvalidOperationException("You should call StartGeneration() first");
+        StartGeneration(_generator.Maze.Width, _generator.Maze.Height);
+    }
+
+    private bool NextStep()
     {
         if (GenerationSteps.MoveNext())
         {

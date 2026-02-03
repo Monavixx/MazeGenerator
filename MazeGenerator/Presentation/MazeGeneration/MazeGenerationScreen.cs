@@ -14,6 +14,7 @@ public class MazeGenerationScreen : Screen
     {
         _mazeGenerationController = mazeGenerationController;
         _mazeGenerationRenderer = new MazeGenerationRenderer(mazeGenerationController);
+        SetInputState(new MazeGenerationInputState(_mazeGenerationController));
     }
 
     public override void Update(TimeSpan deltaTime)

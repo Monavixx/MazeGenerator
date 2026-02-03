@@ -7,7 +7,7 @@ public class MazeGenerationRenderer
 {
     private bool _fullRenderRequired = true;
     private readonly MazeGenerationController _mazeGenerationController;
-    private List<GenerationStep> _stepsToRender = new();
+    private readonly List<GenerationStep> _stepsToRender = [];
     private (int x, int y) _lastCursorPosition = (0, 0);
     private bool _cursorClearRequired = false;
 
@@ -16,6 +16,15 @@ public class MazeGenerationRenderer
         _mazeGenerationController = mazeGenerationController;
         _mazeGenerationController.OnNextStep += HandleNextStep;
         _mazeGenerationController.OnGenerationDone += HandleGenerationDone;
+        _mazeGenerationController.OnStartGeneration += HandleStartGeneration;
+    }
+
+    private void HandleStartGeneration()
+    {
+        ClearCache();
+        _stepsToRender.Clear();
+        _lastCursorPosition = (0, 0);
+        _fullRenderRequired = true;
     }
 
     private void HandleGenerationDone()
